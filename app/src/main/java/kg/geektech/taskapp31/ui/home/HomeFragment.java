@@ -33,13 +33,11 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new TaskAdapter();
-        List<Task> list = App.getAppDatabase().taskDao().getAll();
-        adapter.addItems(list);
-    }
+            }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+       setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -47,6 +45,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recyclerView);
+        roomInit();
         view.findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,10 +53,20 @@ public class HomeFragment extends Fragment {
             }
         });
         setResultListener();
-        initList();
     }
 
-    private void initList() {
+    private void roomInit() {
+        App.getAppDatabase().taskDao().getAll().observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
+            @Override
+            public void onChanged(List<Task> list) {
+                initList(list);
+            }
+        });
+    }
+
+    private void initList(List<Task> list) {
+        adapter = new TaskAdapter();
+        adapter.addItems(list);
         recyclerView.setAdapter(adapter);
     }
 
@@ -93,22 +102,22 @@ public class HomeFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.sort_btn:
-//                sortRoom();
+                sortRoom();
                 return true;
             default:
-                return  super.onOptionsItemSelected(item);
+                return super.onOptionsItemSelected(item);
 
         }
     }
 
-//    private void sortRoom() {
-//        App.getAppDatabase().taskDao().sortByAsc().observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
-//            @Override
-//            public void onChanged(java.util.List<Task> list) {
-//                Toast.makeText(requireContext(), "SORT!", Toast.LENGTH_SHORT).show();
-//                adapter.notifyDataSetChanged();
-//                initList(list);
-//            }
-//        });
-//    }
+    private void sortRoom() {
+        App.getAppDatabase().taskDao().sortByAsc().observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
+            @Override
+            public void onChanged(List<Task> list) {
+                Toast.makeText(requireContext(), "SORT!", Toast.LENGTH_SHORT).show();
+                adapter.notifyDataSetChanged();
+                initList(list);
+            }
+        });
+    }
 }

@@ -3,5 +3,4 @@
     <item android:id="@+id/sort_btn" android:title="sort"/>
     <item android:title="clear"
         android:id="@+id/btn_clear"/>
-
 </menu>

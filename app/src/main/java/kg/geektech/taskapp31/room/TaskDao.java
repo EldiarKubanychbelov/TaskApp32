@@ -13,14 +13,14 @@ import kg.geektech.taskapp31.models.Task;
 @Dao
 public interface TaskDao {
 
-    @Query("SELECT * FROM task")
-    List<Task> getAll();
-
-    @Insert
-    void insert(Task task);
+    @Query("SELECT * FROM Task")
+    LiveData<List<Task>> getAll();
 
     @Query("SELECT * FROM task ORDER BY title ASC")
     LiveData<List<Task>> sortByAsc();
+
+    @Insert
+    void insert(Task task);
 
     @Delete
     void remove(Task task);
