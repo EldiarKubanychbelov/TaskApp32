@@ -4,31 +4,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import kg.geektech.taskapp31.R;
-import kg.geektech.taskapp31.interfaces.OnItemClickListener;
 
 public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> {
 
-    private String[] titles = new String[]{"Hello", "Салам", "Привет"};
+    private Finish finish;
 
-    private OnItemClickListener onItemClickListener;
+    private String[] titles = new String[]{"Салам", "Привет", "Hello"};
+    private int[] imgLogo = new int[]{R.drawable.shaurma, R.drawable.gamburger, R.drawable.pitsa};
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.pager_board, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.pager_board, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.bind(position);
+
+
     }
 
     @Override
@@ -36,33 +38,45 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> 
         return titles.length;
     }
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
+    public void setOpenHome(Finish finish) {
+        this.finish = finish;
     }
 
+
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView textTitle;
-        private Button btnStart;
+
+        TextView txtTitle;
+        ImageView imgLogo2;
+        Button button;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            textTitle = itemView.findViewById(R.id.textTitle);
-            btnStart = itemView.findViewById(R.id.btnStart);
-            btnStart.setOnClickListener(new View.OnClickListener() {
+            txtTitle = itemView.findViewById(R.id.txt_title);
+            imgLogo2 = itemView.findViewById(R.id.img_logo);
+            button = itemView.findViewById(R.id.btn_finish);
+
+            button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onItemClickListener.onClickStart();
+                    finish.btnFinishClick();
                 }
             });
         }
 
         public void bind(int position) {
-            textTitle.setText(titles[position]);
-            if (position == titles.length - 1) {
-                btnStart.setVisibility(View.VISIBLE);
+            txtTitle.setText(titles[position]);
+            imgLogo2.setImageResource(imgLogo[position]);
+
+            if (position == titles.length-1) {
+                button.setVisibility(View.VISIBLE);
             } else {
-                btnStart.setVisibility(View.GONE);
+                button.setVisibility(View.GONE);
             }
+
         }
     }
+}
+
+interface Finish {
+    void btnFinishClick();
 }

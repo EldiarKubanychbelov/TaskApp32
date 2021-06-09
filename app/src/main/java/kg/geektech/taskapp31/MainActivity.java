@@ -1,7 +1,11 @@
 package kg.geektech.taskapp31;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -15,6 +19,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import java.util.ArrayList;
+
+import kg.geektech.taskapp31.ui.onboard.BoardAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,9 +43,10 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-//        Prefs prefs = new Prefs(this);
-//        if (!prefs.isShown()) navController.navigate(R.id.boardFragment);
+       Prefs prefs = new Prefs(this);
+        if (!prefs.isShown()) navController.navigate(R.id.boardFragment);
 
+        navController.navigate(R.id.phoneFragment);
         navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @Override
             public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
@@ -68,4 +75,26 @@ public class MainActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         return navController.navigateUp();
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.action_bar_menu, menu);
+        return true;
+    }
+//
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.btn_clear:
+                Prefs prefs = new Prefs(this);
+                 prefs.clearPref();
+                prefs.clearEditText();
+
+                Toast.makeText(this, "cleared", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 }
