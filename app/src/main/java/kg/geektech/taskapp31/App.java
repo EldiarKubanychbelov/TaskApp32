@@ -18,7 +18,6 @@ public class App extends Application {
                 .allowMainThreadQueries()
                 .build();
     }
-
     public static AppDatabase getAppDatabase() {
         return appDatabase;
     }
