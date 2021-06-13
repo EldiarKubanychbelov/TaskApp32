@@ -62,6 +62,9 @@ public class TaskAdapter  extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         return list.size();
     }
 
+    public  Task getItem(int position){
+        return list.get(position);
+    }
     public void addItem(Task task) {
         list.add(task);
         notifyItemInserted(list.indexOf(task));
@@ -70,6 +73,11 @@ public class TaskAdapter  extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     public void addItems(List<Task> list) {
         this.list.addAll(list);
         notifyDataSetChanged();
+    }
+
+    public void remove(int position){
+        remove(position);
+        notifyItemRemoved(position);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

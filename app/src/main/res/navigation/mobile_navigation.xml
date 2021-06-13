@@ -41,5 +41,14 @@
         android:id="@+id/phoneFragment"
         android:name="kg.geektech.taskapp31.ui.auth.PhoneFragment"
         android:label="fragment_phone"
-        tools:layout="@layout/fragment_phone" />
+        tools:layout="@layout/fragment_phone" >
+        <action
+            android:id="@+id/action_phoneFragment_to_verifyFragment"
+            app:destination="@id/verifyFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/verifyFragment"
+        android:name="kg.geektech.taskapp31.ui.auth.VerifyFragment"
+        android:label="fragment_verify"
+        tools:layout="@layout/fragment_verify" />
 </navigation>

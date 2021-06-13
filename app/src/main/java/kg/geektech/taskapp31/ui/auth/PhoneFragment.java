@@ -6,10 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.PhoneAuthCredential;
@@ -40,7 +42,13 @@ public class PhoneFragment extends Fragment {
         view.findViewById(R.id.btn_continue).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestSMS();
+                if (!edPhone.getText().toString().isEmpty()){
+                    requestSMS();
+                } else {
+                    Toast toast = Toast.makeText(getActivity(),"Жаз номер",Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+
             }
         });
         initCallbacks();
@@ -57,9 +65,22 @@ public class PhoneFragment extends Fragment {
             public void onVerificationFailed(@NonNull FirebaseException e) {
                 Log.e("Phone","onVerificationCompleted" + e.getMessage());
             }
+
+            @Override
+            public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                super.onCodeSent(s, forceResendingToken);
+                Log.e("Phone","code sent");
+
+                Bundle bundle = new Bundle();
+                bundle.putString("code",edPhone.getText().toString());
+                bundle.putString("s",s);
+                Navigation.findNavController(getView()).navigate(R.id.action_phoneFragment_to_verifyFragment,bundle);
+
+
+
+            }
         };
     }
-
     private void requestSMS() {
         String phone = edPhone.getText().toString();
         PhoneAuthOptions options = PhoneAuthOptions.newBuilder()

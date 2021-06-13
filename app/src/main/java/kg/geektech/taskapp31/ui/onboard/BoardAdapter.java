@@ -72,7 +72,6 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> 
             } else {
                 button.setVisibility(View.GONE);
             }
-
         }
     }
 }

@@ -10,7 +10,9 @@ public class Task implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private long id;
+    private String docId;
     private String title;
+
 
     public Task(String title) {
         this.title = title;
@@ -32,4 +34,11 @@ public class Task implements Serializable {
         this.title = title;
     }
 
+    public String getDocId() {
+        return docId;
+    }
+
+    public void setDocId(String docId) {
+        this.docId = docId;
+    }
 }
