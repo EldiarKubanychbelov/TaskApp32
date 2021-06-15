@@ -51,4 +51,9 @@
         android:name="kg.geektech.taskapp31.ui.auth.VerifyFragment"
         android:label="fragment_verify"
         tools:layout="@layout/fragment_verify" />
+    <fragment
+        android:id="@+id/fullScreenFragment"
+        android:name="kg.geektech.taskapp31.ui.profile.FullScreenFragment"
+        android:label="fragment_full_screen"
+        tools:layout="@layout/fragment_full_screen" />
 </navigation>

@@ -1,11 +1,14 @@
 package kg.geektech.taskapp31.ui.dashboard;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,12 +28,12 @@ import java.util.List;
 
 import kg.geektech.taskapp31.App;
 import kg.geektech.taskapp31.R;
+import kg.geektech.taskapp31.interfaces.OnItemClickListener;
 import kg.geektech.taskapp31.models.Task;
 import kg.geektech.taskapp31.ui.home.TaskAdapter;
 
 public class DashboardFragment extends Fragment {
 
-    private DashboardViewModel dashboardViewModel;
     private RecyclerView recyclerView;
     private TaskAdapter adapter;
 
@@ -44,23 +47,16 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
         View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
-        final TextView textView = root.findViewById(R.id.txt_dashboard);
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
         return root;
+
+
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView = view.findViewById(R.id.rv_list_farebace);
         initList();
         getDataFromFirestore();
     }
@@ -78,16 +74,38 @@ public class DashboardFragment extends Fragment {
                     String docId = snapshot.getId();
                     String title = snapshot.getString("title");
                     Task task = new Task(title);
+                    task.setDocId(docId);
                     list.add(task);
                 }
 //                List <Task> list = snapshots.toObjects(Task.class);
-                adapter.addItem((Task) list);
+                adapter.addItems(list);
             }
         });
     }
 
     private void initList() {
         recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onClickStart(int position) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage("Delete ?");
+                builder.setPositiveButton("Oa", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        DeleteFromFirestore(position);
+                    }
+                });
+                builder.setNegativeButton("JOk", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.show();
+            }
+        });
     }
 
     private void DeleteFromFirestore(int position){
@@ -95,6 +113,12 @@ public class DashboardFragment extends Fragment {
         FirebaseFirestore.getInstance()
                 .collection("tasks")
                 .document(task.getDocId())
-                .delete();
+                .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(requireContext(), "Чау еврибади", Toast.LENGTH_SHORT).show();
+                adapter.remove(position);
+            }
+        });
     }
 }

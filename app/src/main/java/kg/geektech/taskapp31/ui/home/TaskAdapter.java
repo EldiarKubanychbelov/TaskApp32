@@ -15,11 +15,13 @@ import java.util.List;
 
 import kg.geektech.taskapp31.App;
 import kg.geektech.taskapp31.R;
+import kg.geektech.taskapp31.interfaces.OnItemClickListener;
 import kg.geektech.taskapp31.models.Task;
 
 public class TaskAdapter  extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     private ArrayList<Task> list = new ArrayList<>();
+    private OnItemClickListener onItemClickListener;
 
     @NonNull
     @Override
@@ -32,6 +34,13 @@ public class TaskAdapter  extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.bind(list.get(position));
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.onClickStart(position);
+            }
+        });
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -62,6 +71,10 @@ public class TaskAdapter  extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         return list.size();
     }
 
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
     public  Task getItem(int position){
         return list.get(position);
     }
@@ -76,7 +89,7 @@ public class TaskAdapter  extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     }
 
     public void remove(int position){
-        remove(position);
+        list.remove(position);
         notifyItemRemoved(position);
     }
 

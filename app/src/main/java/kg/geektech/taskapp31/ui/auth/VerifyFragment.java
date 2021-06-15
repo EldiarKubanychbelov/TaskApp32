@@ -76,7 +76,6 @@ public class VerifyFragment extends Fragment {
             }
         });
 
-
         new CountDownTimer(50000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -85,7 +84,6 @@ public class VerifyFragment extends Fragment {
                         TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60);
                 binding.txtTimer.setText(text);
             }
-
             @Override
             public void onFinish() {
                 Navigation.findNavController(view).popBackStack();
